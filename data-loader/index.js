@@ -1,19 +1,16 @@
-const NBA = require("nba");
+const nba = require("nba");
 const util = require("util");
 const fs = require("fs");
 
-NBA.stats.playerStats({
-    Season: "2016-17"
-})
-.then(
-    (data) => util.promisify(fs.writeFile)("players-data.json", JSON.stringify(data))
-)
-.catch(console.error);
+const downloadLeagueGameLog = (file, options) => nba.stats.leagueGameLog(options)
+    .then(
+        (data) => util.promisify(fs.writeFile)(file, JSON.stringify(data, null, '\t'))
+    );
 
-NBA.stats.boxScore({
-    GameID: "0021700146"
-})
-.then(
-    (data) => util.promisify(fs.writeFile)("scores-data.json", JSON.stringify(data, null, '\t'))
-)
-.catch(console.error);
+Promise.all([
+    downloadLeagueGameLog("player-data.json", {PlayerOrTeam: "P"}),
+    downloadLeagueGameLog("team-data.json", {PlayerOrTeam: "T"})
+]).then(
+    () => console.log("Successfully loaded data"),
+    console.error
+);
