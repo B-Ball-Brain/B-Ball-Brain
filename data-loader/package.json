@@ -1,8 +1,19 @@
 {
+  "private": true,
   "name": "data-loader",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index.mjs",
+  "scripts": {
+    "load-player-stats": "node --experimental-modules load-player-stats.mjs",
+    "load-game-stats": "node --experimental-modules load-game-stats.mjs",
+    "lint": "eslint . --ext js,mjs"
+  },
   "dependencies": {
+    "colors": "^1.1.2",
     "nba": "^4.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^4.11.0",
+    "eslint-config-steven-roberts": "github:Steven-Roberts/eslint-config"
   }
 }

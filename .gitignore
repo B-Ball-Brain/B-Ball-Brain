@@ -5,5 +5,3 @@ yarn-debug.log*
 yarn-error.log*
 .npm
 node_modules/
-
-data-loader/*-data.json

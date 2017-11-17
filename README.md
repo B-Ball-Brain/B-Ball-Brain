@@ -12,5 +12,6 @@ navigate to the `data-loader` directory and execute the following commands.
 
 ```shell
 $ npm install
-$ node index.js
+$ npm run load-player-stats
+$ npm run load-game-stats
 ```

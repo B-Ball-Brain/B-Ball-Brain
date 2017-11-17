@@ -1,0 +1,11 @@
+env:
+    node: true
+    es6: true
+parserOptions:
+    sourceType: module
+extends: eslint-config-steven-roberts
+rules:
+    no-await-in-loop: off
+    no-console: off
+    no-magic-numbers: off
+    require-jsdoc: off
