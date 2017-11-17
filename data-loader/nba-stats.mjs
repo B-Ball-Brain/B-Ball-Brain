@@ -112,6 +112,9 @@ ${endTime}`);
             (endTime - startTime);
 
         return {
+            gameId,
+            startTime,
+            endTime,
             homePlayers: players.filter((p) => p[teamIdIndex] === homeTeamId)
                 .map((p) => p[playerIdIndex]),
             awayPlayers: players.filter((p) => p[teamIdIndex] === awayTeamId)
