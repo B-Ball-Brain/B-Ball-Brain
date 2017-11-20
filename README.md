@@ -15,3 +15,11 @@ $ npm install
 $ npm run load-player-stats
 $ npm run load-game-stats
 ```
+
+Team Names
+
+Mahesh
+Steven
+Chidubem
+Patrick
+
