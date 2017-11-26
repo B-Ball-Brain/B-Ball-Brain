@@ -8,4 +8,5 @@ rules:
     no-await-in-loop: off
     no-console: off
     no-magic-numbers: off
+    no-sync: off
     require-jsdoc: off

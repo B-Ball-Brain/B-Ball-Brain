@@ -2,13 +2,6 @@ import 'colors';
 import NbaStats from './nba-stats';
 import fs from 'fs';
 
-const writeJson = (path, json) => new Promise((resolve, reject) =>
-    fs.writeFile(
-        path,
-        JSON.stringify(json, null, '\t'),
-        (err) => (err ? reject(err) : resolve())
-    ));
-
 const playersOnCourtPerTeam = 5;
 
 const writeData = async (options) => {
@@ -26,8 +19,11 @@ const writeData = async (options) => {
 
         let startTime = 0;
         for (const subTime of subTimes) {
-            if (subTime - options.minTimeBetweenSubs > startTime) {
-                const endTime = subTime - options.subPadding;
+            const endTime = subTime - options.subPadding;
+            const file = `output/${gameId}-${startTime}-${endTime}-data.json`;
+
+            if (endTime - options.minTimeBetweenSubs > startTime &&
+                !fs.existsSync(file)) {
                 const timeRangeStats = await nbaStats
                     .loadTrainingDataInTimeRange(gameId, startTime, endTime);
 
@@ -36,12 +32,12 @@ const writeData = async (options) => {
 
                 if (numHomePlayers === playersOnCourtPerTeam &&
                     numAwayPlayers === playersOnCourtPerTeam) {
-                    await writeJson(
-                        `output/${gameId}-${startTime}-${subTime}-data.json`,
-                        timeRangeStats
+                    fs.writeFileSync(
+                        file,
+                        JSON.stringify(timeRangeStats, null, '\t')
                     );
                 } else {
-                    console.warn(`From ${startTime} to ${subTime}, the home \
+                    console.warn(`From ${startTime} to ${endTime}, the home \
 team has ${numHomePlayers} players and the away team has ${numAwayPlayers}!
 Skipping...`.yellow);
                 }
