@@ -312,4 +312,115 @@ for filename in os.listdir('output/'):
             curr.execute(insertsql, values_dict.values())
 
 conn.commit()
+
+# Drop view if it exists
+curr.execute('DROP VIEW IF EXISTS playerstatsnumview')
+
+# Create view where we only select the numeric values from the table and use it in join
+playerstats_numeric_view = """
+CREATE VIEW IF NOT EXISTS playerstatsnumview
+AS
+   SELECT
+          playerId           ,
+          teamId             ,
+          age                ,
+          gp                 ,
+          w                  ,
+          l                  ,
+          wPct               ,
+          min                ,
+          fgm                ,
+          fga                ,
+          fgPct              ,
+          fG3M               ,
+          fG3A               ,
+          fg3Pct             ,
+          ftm                ,
+          fta                ,
+          ftPct              ,
+          oreb               ,
+          dreb               ,
+          reb                ,
+          ast                ,
+          tov                ,
+          stl                ,
+          blk                ,
+          blka               ,
+          pf                 ,
+          pfd                ,
+          pts                ,
+          plusMinus          ,
+          nbaFantasyPts      ,
+          dD2                ,
+          tD3                ,
+          gpRank             ,
+          wRank              ,
+          lRank              ,
+          wPctRank           ,
+          minRank            ,
+          fgmRank            ,
+          fgaRank            ,
+          fgPctRank          ,
+          fg3mRank           ,
+          fg3aRank           ,
+          fg3PctRank         ,
+          ftmRank            ,
+          ftaRank            ,
+          ftPctRank          ,
+          orebRank           ,
+          drebRank           ,
+          rebRank            ,
+          astRank            ,
+          tovRank            ,
+          stlRank            ,
+          blkRank            ,
+          blkaRank           ,
+          pfRank             ,
+          pfdRank            ,
+          ptsRank            ,
+          plusMinusRank      ,
+          nbaFantasyPtsRank  ,
+          dd2Rank            ,
+          td3Rank            ,
+          cfid               
+     FROM playerstats;
+"""
+
+curr.execute(playerstats_numeric_view)
+conn.commit()
+
+# Drop view if it exists
+curr.execute('DROP VIEW IF EXISTS timecapsuleview')
+
+timecapsule_view = """
+CREATE VIEW IF NOT EXISTS timecapsuleview
+AS 
+   SELECT 
+   T2.*,
+   T3.*,
+   T4.*,
+   T5.*,
+   T6.*,
+   T7.*,
+   T8.*,
+   T9.*,
+   T10.*,
+   T11.*,
+   T1.plusMinusPerMinute
+   FROM
+   playermatchup as T1
+   INNER JOIN playerstatsnumview as T2 on T2.playerId = T1.homeTeamCenterId
+   INNER JOIN playerstatsnumview as T3 on T3.playerId = T1.homeTeamForward1Id
+   INNER JOIN playerstatsnumview as T4 on T4.playerId = T1.homeTeamForward2Id
+   INNER JOIN playerstatsnumview as T5 on T5.playerId = T1.homeTeamGuard1Id
+   INNER JOIN playerstatsnumview as T6 on T6.playerId = T1.homeTeamGuard2Id
+   INNER JOIN playerstatsnumview as T7 on T7.playerId = T1.awayTeamCenterId
+   INNER JOIN playerstatsnumview as T8 on T8.playerId = T1.awayTeamForward1Id
+   INNER JOIN playerstatsnumview as T9 on T9.playerId = T1.awayTeamForward2Id
+   INNER JOIN playerstatsnumview as T10 on T10.playerId = T1.awayTeamGuard1Id
+   INNER JOIN playerstatsnumview as T11 on T11.playerId = T1.awayTeamGuard2Id
+"""
+curr.execute(timecapsule_view)
+conn.commit()
+
 conn.close()
