@@ -165,7 +165,7 @@ CREATE TABLE IF NOT EXISTS playerstats
 
 curr.execute(create_player_statistics_table)
 
-with open('output/player-stats.json','r') as f:
+with open('../data-loader/output/player-stats.json','r') as f:
     data = json.load(f)
     # Using the dictionaries key names as column
     # names and the values as values and inserting
@@ -217,9 +217,9 @@ curr.execute(create_player_matchup_table)
 # RegEx to match timecapsule filenames
 timecapsule_filename_regex = re.compile('[0-9]+-[0-9]+-[0-9]+-data\.json')
 
-for filename in os.listdir('output/'):
+for filename in os.listdir('../data-loader/output/'):
     if timecapsule_filename_regex.match(filename):
-        with open('output/' + filename, 'r') as f:
+        with open('../data-loader/output/' + filename, 'r') as f:
             data                                 = json.load(f)
             values_dict                          = dict()
             values_dict["gameId"]                = data["gameId"]     
