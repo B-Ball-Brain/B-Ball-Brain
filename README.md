@@ -35,7 +35,7 @@ $ sqlite3 nba-insight.db
 sqlite> .read query.sql
 ```
 
-You can exit from sqlite3 by pressing `CTRL + C` and the data should be
+You can exit from sqlite3 by pressing `CTRL + C`, and the data should be
 saved in `data.csv`. Each row is an example (timecapsule) with the last
 column being the label (plus/minus per minute).
 
