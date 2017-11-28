@@ -18,9 +18,9 @@ $ npm run load-game-stats
 
 ## Database Generator
 
-Once the data has been loaded into data-loader/output, running the script
-data-generator/load_data_into_sqlite.py will read all the data and create
-a sqlite database with Player Matchup and Player Statistics table and
+Once the data has been loaded into `data-loader/output`, running the script
+`data-generator/load_data_into_sqlite.py` will read all the data and create
+a sqlite database with Player Matchup and Player Statistics tables and
 corresponding views.
 
 ```shell
@@ -28,7 +28,7 @@ $ python load_data_into_sqlite.py
 ```
 
 A CSV file containing all the data for all time capsules can be next created
-by running query.sql inside sqlite cli.
+by running `query.sql` inside the sqlite cli.
 
 ```shell
 $ sqlite3 nba-insight.db
@@ -36,14 +36,13 @@ sqlite> .read query.sql
 ```
 
 You can exit from sqlite3 by pressing `CTRL + C` and the data should be
-saved in data.csv file. Each row is an example (timecapsule) with the last
+saved in `data.csv`. Each row is an example (timecapsule) with the last
 column being the label (plus/minus per minute).
 
 
-## Team 
+## Team
 
 * Chidubem Arachie
 * Mahesh Narayanamurthi
 * Steven Roberts
 * Patrick Sullivan
-
