@@ -406,7 +406,7 @@ AS
    T9.*,
    T10.*,
    T11.*,
-   T1.plusMinusPerMinute
+   T1.plusMinusPerMinute 
    FROM
    playermatchup as T1
    INNER JOIN playerstatsnumview as T2 on T2.playerId = T1.homeTeamCenterId
