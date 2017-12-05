@@ -159,36 +159,3 @@ CREATE VIEW IF NOT EXISTS playerstatsnumview AS
 		cfid
 FROM playerstats; 
 
-
-DROP VIEW IF EXISTS timecapsuleview;
-
-CREATE VIEW IF NOT EXISTS timecapsuleview
-AS 
-   SELECT 
-   T2.*,
-   T3.*,
-   T4.*,
-   T5.*,
-   T6.*,
-   T7.*,
-   T8.*,
-   T9.*,
-   T10.*,
-   T11.*,
-   T1.plusMinusPerMinute 
-   FROM
-   playermatchup as T1
-   INNER JOIN playerstatsnumview as T2 on T2.playerId = T1.homeTeamCenterId
-   INNER JOIN playerstatsnumview as T3 on T3.playerId = T1.homeTeamForward1Id
-   INNER JOIN playerstatsnumview as T4 on T4.playerId = T1.homeTeamForward2Id
-   INNER JOIN playerstatsnumview as T5 on T5.playerId = T1.homeTeamGuard1Id
-   INNER JOIN playerstatsnumview as T6 on T6.playerId = T1.homeTeamGuard2Id
-   INNER JOIN playerstatsnumview as T7 on T7.playerId = T1.awayTeamCenterId
-   INNER JOIN playerstatsnumview as T8 on T8.playerId = T1.awayTeamForward1Id
-   INNER JOIN playerstatsnumview as T9 on T9.playerId = T1.awayTeamForward2Id
-   INNER JOIN playerstatsnumview as T10 on T10.playerId = T1.awayTeamGuard1Id
-   INNER JOIN playerstatsnumview as T11 on T11.playerId = T1.awayTeamGuard2Id;
-
-ALTER VIEW timecapsuleview DROP COLUMN playerId;
-
-ALTER VIEW timecapsuleview DROP COLUMN teamId;
