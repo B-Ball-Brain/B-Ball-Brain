@@ -19,11 +19,16 @@ def load_data():
         for row in csv_file:
             data_rows.append(row)
 
-    row_data = np.array(data_rows)
+    #To speed up training/test, uncomment/comment to use less training and test samples
+    row_data = np.array(data_rows, dtype=float)
     train_data = row_data[:23272,:-1]
+    #train_data = row_data[:10000,:-1]
     train_label = row_data[:23272,-1]
+    #train_label = row_data[:10000,-1]
     test_data = row_data[23272:,:-1]
-    test_label = row_data[23272:,-1]   
+    #test_data = row_data[26590:,:-1]
+    test_label = row_data[23272:,-1]
+    #test_label = row_data[26590:,-1]   
     data['train_data'] = train_data
     data['train_label'] = train_label
     data['test_data'] = test_data
