@@ -1,47 +1,39 @@
-realPositions = dict(Forward=2, Guard=2, Center=1)
+realPositions = dict(Forward=2, Center=1, Guard=2)
 
+def getFixedPlayers(oldPositions):
+    extraPlayers = set()
 
-def playerLineupCSAT(playerPositions):
-    '''playerPositions is a dict of lists'''
+    goodPositions = {pos: [] for pos in realPositions}
+    badPositions = set(oldPositions.keys()) - set(goodPositions.keys())
+    for realPos, posMaxNum in realPositions.items():
+        if realPos in oldPositions:
+            # copy over the good positions
+            while len(oldPositions[realPos]) > 0:
+                if len(goodPositions[realPos]) < posMaxNum:
+                    goodPositions[realPos].append(oldPositions[realPos].pop())
+                else:
+                    # excess players go to the extras
+                    extraPlayers.add(oldPositions[realPos].pop())
 
-    badPositions = set(playerPositions.keys()) - set(realPositions.keys())
-    extraPlayers = set(playerPositions.get('', []))
+    # Add players from bad position that look similiar to good positions
+    for realPos, maxNum in realPositions.items():
+        for badPos in badPositions:
+            # bad position is close to a good position
+            if realPos in badPos:
+                while len(goodPositions[realPos]) < maxNum and len(oldPositions[badPos]) > 0:
+                    goodPositions[realPos].append(oldPositions[badPos].pop())
 
-    # Remove excess players from the real positions into their own list
-    for posName, posMaxNum in realPositions.items():
-        while len(playerPositions[posName]) > posMaxNum:
-            extraPlayers.add(playerPositions[posName].pop())
+    # Now move the rest of the bad everything into the extras list
+    for badPos in badPositions:
+        extraPlayers.update(oldPositions[badPos])
 
-    # go through real positions that are not filled
-    for realPosName, posMaxNum in realPositions.items():
-        while len(playerPositions[realPosName]) < posMaxNum:
-            changed = False
+    # move the extras to the unfilled positions
+    for realPos, maxNum in realPositions.items():
+        while len(goodPositions[realPos]) < maxNum:
+            goodPositions[realPos].append(extraPlayers.pop())
 
-            # find a player in a similar named position to add to the real position
-            for posName in playerPositions:
-                if realPosName in posName and realPosName != posName:
-                    if len(playerPositions[posName]) > 0:
-                        playerPositions[realPosName].append(
-                            playerPositions[posName].pop())
-                        changed = True
-                        break
+    # check that all positions are filled
+    for realPos, maxNum in realPositions.items():
+        assert len(goodPositions[realPos]) == maxNum
 
-            if not changed:
-                break
-
-    # leftovers that didn't get sorted into one of the hogwarts houses, put into extras
-    for badPosName in badPositions:
-        extraPlayers.update(playerPositions[badPosName])
-        playerPositions[badPosName] = []
-
-    for realPosName, posMaxNum in realPositions.items():
-        # keep choosing from extras while position is still not filled
-        while len(playerPositions[realPosName]) < posMaxNum:
-            playerPositions[realPosName].append(extraPlayers.pop())
-
-    # double check positions are good...
-    for posName, players in playerPositions.items():
-        if posName in realPositions:
-            assert len(players) == realPositions[posName]
-        else:
-            assert len(players) == 0
+    return goodPositions
