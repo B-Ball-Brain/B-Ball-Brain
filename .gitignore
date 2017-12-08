@@ -8,3 +8,5 @@ data-loader/output/
 
 database-generator/data.csv
 database-generator/nba-insight.db
+
+models/ModelResults.csv
