@@ -1,10 +1,16 @@
 import fileUtilities
+from sklearn import preprocessing
+from sklearn.model_selection import train_test_split
 from sklearn import linear_model
 from sklearn import svm
 from sklearn import ensemble
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 from time import time
+import random
+import numpy as np
+
+random.seed(100)
+np.random.seed(100)
 
 TEST_PERCENT = .10
 
@@ -15,17 +21,25 @@ def getNewModel():
     yield linear_model.RidgeCV(alphas=[0.1, 1.0, 10.0])
     yield linear_model.ElasticNetCV(alphas=[0.1, 1.0, 10.0])
     yield linear_model.LassoCV(alphas=[0.1, 1.0, 10.0])
-    yield ensemble.GradientBoostingRegressor(n_estimators=5)
-    yield ensemble.AdaBoostRegressor(n_estimators=5)
-    yield ensemble.ExtraTreesRegressor(n_estimators=5)
-    yield ensemble.RandomForestRegressor(n_estimators=5)
-    yield svm.SVR()
+    yield ensemble.GradientBoostingRegressor(n_estimators=1)
+    yield ensemble.GradientBoostingRegressor(n_estimators=2)
+    yield ensemble.GradientBoostingRegressor(n_estimators=4)
+    yield ensemble.GradientBoostingRegressor(n_estimators=8)
+    yield ensemble.AdaBoostRegressor(n_estimators=1)
+    yield ensemble.AdaBoostRegressor(n_estimators=2)
+    yield ensemble.AdaBoostRegressor(n_estimators=4)
+    yield ensemble.AdaBoostRegressor(n_estimators=8)
+    yield ensemble.ExtraTreesRegressor(n_estimators=2)
+    yield ensemble.RandomForestRegressor(n_estimators=2)
+    ''' can take 5+ mins ...'''
+    # yield svm.SVR()
 
 
 def main():
     data = fileUtilities.getDataFromCSV()
     x = data[:, :-1]
     y = data[:, -1]
+    x = preprocessing.scale(x)
     trainX, testX, trainY, testY = train_test_split(x, y, test_size=TEST_PERCENT)
     numFeatures = trainX.shape[1]
     trainSize = trainX.shape[0]
@@ -59,6 +73,9 @@ def testModel(model, testData, testLabels):
 
 def printModelResults(model):
     name = model.name
+    estimators = model.get_params().get('n_estimators', 0)
+    if estimators > 0:
+        name += ", est=" + str(estimators)
     dur = "{0:.3f}".format(model.trainDuration)
     trainMSE = "{0:.3f}".format(model.trainMSE)
     testMSE = "{0:.3f}".format(model.testMSE)
