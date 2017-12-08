@@ -1,36 +1,53 @@
-"""Function for loading csv file"""
+import pandas as pd
 import numpy as np
-import csv
+import math
+
+trainPct = .9
+testPct = .1
 
 
-def load_data():
+def load_data() -> dict:
     """
     Load the data.csv file into a dictionary of train and test data.
 
     :return: a dictinary containing train and test data sets
     :rtype: dictionary
     """
-    data = dict()
     filename = '../database-generator/data.csv'
-    data_rows = []
+    print("Loading data from ", filename, "...")
 
-    with open(filename) as csv_data:
-        csv_file = csv.reader(csv_data)
-        for row in csv_file:
-            data_rows.append(row)
+    dataFrame = pd.read_csv(filename, dtype=np.float)
+    data = dataFrame.values
 
-    #To speed up training/test, uncomment/comment to use less training and test samples
-    row_data = np.array(data_rows, dtype=float)
-    train_data = row_data[:23272,:-1]
-    #train_data = row_data[:10000,:-1]
-    train_label = row_data[:23272,-1]
-    #train_label = row_data[:10000,-1]
-    test_data = row_data[23272:,:-1]
-    #test_data = row_data[26590:,:-1]
-    test_label = row_data[23272:,-1]
-    #test_label = row_data[26590:,-1]   
-    data['train_data'] = train_data
-    data['train_label'] = train_label
-    data['test_data'] = test_data
-    data['test_label'] = test_label   
-    return data
+    numExamples = data.shape[0]
+    numFeatures = data.shape[1] - 1
+    print("\tFeatures=", numFeatures, "Examples=", numExamples)
+
+    assert numExamples > 50
+    assert numFeatures > 0
+
+    numTrain = math.floor(numExamples * trainPct)
+    numTest = math.floor(numExamples * testPct)
+    print("\tnumTrain=", numTrain, "numTest=", numTest)
+
+    # print("Converting and slicing", numExamples, "examples for numpy ...")
+    # data = np.array(data, dtype=float)
+    test_data = data[:numTest, :-1]
+    test_label = data[:numTest, -1]
+    train_data = data[numTest:numTest + numTrain, :-1]
+    train_label = data[numTest:numTest + numTrain, -1]
+
+    modelParams = dict()
+    modelParams['train_data'] = train_data
+    modelParams['train_label'] = train_label
+    modelParams['test_data'] = test_data
+    modelParams['test_label'] = test_label
+    return modelParams
+
+
+if __name__ == '__main__':
+    from datetime import datetime
+    start = datetime.now()
+    load_data()
+    dur = datetime.now() - start
+    print("Load Data complete in", dur, "time")
