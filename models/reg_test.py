@@ -1,34 +1,70 @@
-import numpy as np
+import fileUtilities
+from sklearn import linear_model
+from sklearn import svm
+from sklearn import ensemble
+from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
-from regression_models import linear_reg, support_vector_reg, ridge_regCV, lasso_regCV, \
-elastic_net_regCV, random_forrest_reg, gradient_boosting_reg, ada_boost_reg, extra_trees_reg, bayesian_ridge_reg
-from load_data import load_data
+from time import time
 
-def test_models(model,test_data, test_label):
-	function = model
-	print("The mean squared error on the test data is %0.2f" % mean_squared_error(test_label, function.predict(test_data)))
+TEST_PERCENT = .10
 
-data = load_data()
-train_data = data['train_data']
-train_label = data['train_label']
-test_data = data['test_data']
-test_label = data['test_label']
 
-print("Training on %s examples" % train_data.shape[0])
-print("Testing on %s examples" % test_data.shape[0])
+def getNewModel():
+    yield linear_model.LinearRegression()
+    yield linear_model.BayesianRidge()
+    yield linear_model.RidgeCV(alphas=[0.1, 1.0, 10.0])
+    yield linear_model.ElasticNetCV(alphas=[0.1, 1.0, 10.0])
+    yield linear_model.LassoCV(alphas=[0.1, 1.0, 10.0])
+    yield ensemble.GradientBoostingRegressor(n_estimators=5)
+    yield ensemble.AdaBoostRegressor(n_estimators=5)
+    yield ensemble.ExtraTreesRegressor(n_estimators=5)
+    yield ensemble.RandomForestRegressor(n_estimators=5)
+    yield svm.SVR()
 
-#Un-comment to train using a different model
 
-#model = ridge_regCV(train_data,train_label)
-#model = lasso_regCV(train_data,train_label)
-#model = elastic_net_regCV(train_data,train_label)
-model = bayesian_ridge_reg(train_data,train_label)
-#model = support_vector_reg(train_data,train_label)
-#model = gradient_boosting_reg(train_data,train_label)
-#model = random_forrest_reg(train_data,train_label)
-#model = linear_reg(train_data,train_label)
-#model = ada_boost_reg(train_data,train_label)
-#model = random_forrest_reg(train_data,train_label)
-print("The mean squared error on the training data is %0.2f" % mean_squared_error(train_label, model.predict(train_data)))
-test_models(model,test_data,test_label)
-	
+def main():
+    data = fileUtilities.getDataFromCSV()
+    x = data[:, :-1]
+    y = data[:, -1]
+    trainX, testX, trainY, testY = train_test_split(x, y, test_size=TEST_PERCENT)
+    numFeatures = trainX.shape[1]
+    trainSize = trainX.shape[0]
+    testSize = testX.shape[0]
+    assert trainSize > 50
+    assert testSize > 0
+    assert numFeatures > 0
+    print("\t Features:{} \t TrainSize={} \t TestSize={}".format(numFeatures, trainSize, testSize))
+
+    for model in getNewModel():
+        model.name = str(model).split('(')[0]
+        trainModel(model, trainX, trainY)
+        testModel(model, testX, testY)
+        printModelResults(model)
+
+
+def trainModel(model, trainData, trainLabels):
+    print("Training with", model.name, "...")
+    start = time()
+    model.fit(trainData, trainLabels)
+    model.trainDuration = time() - start
+    trainPredictions = model.predict(trainData)
+    model.trainMSE = mean_squared_error(trainLabels, trainPredictions)
+
+
+def testModel(model, testData, testLabels):
+    print("Testing with", model.name, "...")
+    testPredictions = model.predict(testData)
+    model.testMSE = mean_squared_error(testLabels, testPredictions)
+
+
+def printModelResults(model):
+    name = model.name
+    dur = "{0:.3f}".format(model.trainDuration)
+    trainMSE = "{0:.3f}".format(model.trainMSE)
+    testMSE = "{0:.3f}".format(model.testMSE)
+    outputs = name, dur, trainMSE, testMSE
+    print("\t{} took {} secs with MSEs of {} and {}".format(*outputs))
+
+
+if __name__ == '__main__':
+    main()
