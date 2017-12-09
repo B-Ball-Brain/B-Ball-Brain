@@ -7,18 +7,26 @@ def getDataFromCSV():
     """
     Load the data.csv file into train and test data
     """
-
     start = time()
-    filename = '../database-generator/data.csv'
-    print("Loading data from ", filename, "...")
+    trainfile = '../database-generator/data.csv'
+    testfile = '../database-generator/testdata.csv'
+    syntheticfile = '../database-generator/synthetic.csv'
+    print("Loading training and test data from %s and %s ..." % (trainfile, testfile))
 
-    dataFrame = pd.read_csv(filename, dtype=np.float)
-    data = dataFrame.values
+    dataFrame = pd.read_csv(trainfile, dtype=np.float, header=None)
+    train_data = dataFrame.values
+
+    dataFrame = pd.read_csv(testfile, dtype=np.float, header=None)
+    test_data = dataFrame.values
+
+    dataFrame = pd.read_csv(syntheticfile, dtype=np.float, header=None)
+    synthetic_data = dataFrame.values
 
     dur = time() - start
-    print("Load from CSV complete in {0:.3f} seconds".format(dur))
-    return data
+    print("Train and test data loaded in {0:.3f} seconds".format(dur))
+    return train_data, test_data, synthetic_data
 
 
 if __name__ == '__main__':
     getDataFromCSV()
+
