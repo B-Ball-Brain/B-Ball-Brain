@@ -11,4 +11,6 @@
 .mode csv
 .output data.csv
 select * from timecapsuleview;
+.output testdata.csv
+select * from timecapsuleview_testdata;
 .output stdout

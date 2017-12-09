@@ -88,10 +88,7 @@ awayTeamGuard1Id       INTEGER,
 awayTeamGuard2Id       INTEGER,
 plusMinusPerMinute     REAL);
 
-
-
 DROP VIEW IF EXISTS playerstatsnumview;
-
 
 CREATE VIEW IF NOT EXISTS playerstatsnumview AS 
     SELECT 
@@ -159,3 +156,21 @@ CREATE VIEW IF NOT EXISTS playerstatsnumview AS
 		cfid
 FROM playerstats; 
 
+DROP TABLE IF EXISTS playermatchup_testdata;
+
+CREATE TABLE IF NOT EXISTS playermatchup_testdata(
+id                     INTEGER PRIMARY KEY AUTOINCREMENT,
+gameId                 INTEGER,
+startTime              INTEGER,
+endTime                INTEGER,
+homeTeamCenterId       INTEGER,
+homeTeamForward1Id     INTEGER,
+homeTeamForward2Id     INTEGER,
+homeTeamGuard1Id       INTEGER,
+homeTeamGuard2Id       INTEGER,
+awayTeamCenterId       INTEGER,
+awayTeamForward1Id     INTEGER,
+awayTeamForward2Id     INTEGER,
+awayTeamGuard1Id       INTEGER,
+awayTeamGuard2Id       INTEGER,
+plusMinusPerMinute     REAL);
