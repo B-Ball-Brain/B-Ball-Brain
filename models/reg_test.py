@@ -4,6 +4,7 @@ from sklearn import preprocessing
 from sklearn import linear_model
 from sklearn import ensemble
 from sklearn import svm
+from sklearn import dummy
 from sklearn.metrics import mean_squared_error, r2_score
 from time import time
 import random
@@ -18,11 +19,12 @@ np.random.seed(100)
 def getNewModel():
     alphas = [2**x for x in range(-7, 4)]
     #estimators = [1, 2, 4, 10, 20, 50, 100]
-    #yield linear_model.LinearRegression()
+    yield dummy.DummyRegressor()
+    yield linear_model.LinearRegression()
     yield linear_model.BayesianRidge()
-    yield linear_model.RidgeCV(alphas=alphas, scoring='r2')
+    yield linear_model.RidgeCV(alphas=alphas)
     yield linear_model.ElasticNetCV(alphas=alphas)
-    yield linear_model.LassoCV(alphas=alphas)    
+    yield linear_model.LassoCV(alphas=alphas)
     yield ensemble.GradientBoostingRegressor(n_estimators=10)
     yield ensemble.AdaBoostRegressor(n_estimators=10)
     #yield ensemble.ExtraTreesRegressor(n_estimators=10)
@@ -30,17 +32,18 @@ def getNewModel():
     #yield svm.LinearSVR()
     ''' can take 5+ mins below ...'''
     #yield svm.SVR(kernel='rbf')
-    
+
 
 def main():
     train_data, test_data, synthetic_data = fileUtilities.getDataFromCSV()
     trainX = train_data[:, :-1]
     trainY = train_data[:, -1]
-    trainX = preprocessing.scale(trainX)
+    scaler = preprocessing.StandardScaler().fit(trainX)
+    trainX = scaler.transform(trainX)
 
     testX = test_data[:, :-1]
     testY = test_data[:, -1]
-    testX = preprocessing.scale(testX)
+    testX = scaler.transform(testX)
     #trainX, testX, trainY, testY = train_test_split(x, y, test_size=TEST_PERCENT)
     numFeatures = trainX.shape[1]
     trainSize = trainX.shape[0]
@@ -61,13 +64,13 @@ def main():
             trainModel(model, trainX, trainY)
             model_list.append(model)
         print("\n")
-        for model in model_list:    
+        for model in model_list:
             testModel(model, testX, testY)
             printModelResults(model)
             outFile.write(getOutputModelString(model) + '\n')
         print("\n")
         for model in model_list:
-        	makeIndividualPredictions(model, synthetic_data)
+        	makeIndividualPredictions(model, synthetic_data, scaler)
 
 
 def trainModel(model, trainData, trainLabels):
@@ -124,9 +127,8 @@ def getOutputModelString(m):
     return ','.join([str(val) for val in output])
 
 
-def makeIndividualPredictions(model, s_data):
-	testS = preprocessing.scale(s_data)
-	testPredictions = model.predict(s_data)
+def makeIndividualPredictions(model, s_data, scaler):
+	testPredictions = model.predict(scaler.transform(s_data))
 	formattedPred = ["{:0.3f}".format(member) for member in testPredictions]
 	print("Testing synthetic data with", model.name, "gives the predictions", formattedPred)
 
