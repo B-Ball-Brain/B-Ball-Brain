@@ -17,21 +17,19 @@ np.random.seed(100)
 
 def getNewModel():
     alphas = [2**x for x in range(-7, 4)]
-    estimators = [1, 2, 4, 10, 100]
-    yield linear_model.LinearRegression()
+    #estimators = [1, 2, 4, 10, 20, 50, 100]
+    #yield linear_model.LinearRegression()
     yield linear_model.BayesianRidge()
     yield linear_model.RidgeCV(alphas=alphas, scoring='r2')
     yield linear_model.ElasticNetCV(alphas=alphas)
     yield linear_model.LassoCV(alphas=alphas)    
-    for e in estimators:
-        yield ensemble.GradientBoostingRegressor(n_estimators=e)
-    for e in estimators:
-        yield ensemble.AdaBoostRegressor(n_estimators=e)
-    yield ensemble.ExtraTreesRegressor(n_estimators=10)
+    yield ensemble.GradientBoostingRegressor(n_estimators=10)
+    yield ensemble.AdaBoostRegressor(n_estimators=10)
+    #yield ensemble.ExtraTreesRegressor(n_estimators=10)
     yield ensemble.RandomForestRegressor(n_estimators=10)
-    yield svm.LinearSVR()
+    #yield svm.LinearSVR()
     ''' can take 5+ mins below ...'''
-    # yield svm.SVR(kernel='rbf')
+    #yield svm.SVR(kernel='rbf')
     
 
 def main():
@@ -110,7 +108,8 @@ def getOutputModelString(m):
     # alphas = m.get_params().get('alphas', [])
     alpha = getattr(m, 'alpha_', '')
     estimator = m.get_params().get('n_estimators', '')
-    fullName = m.name + str(estimator)
+    #fullName = m.name + str(estimator)
+    fullName = m.name
     output = [fullName]
     output.append(alpha)
     output.append(estimator)
