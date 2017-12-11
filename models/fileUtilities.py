@@ -24,6 +24,7 @@ def getDataFromCSV():
 
     dur = time() - start
     print("Train and test data loaded in {0:.3f} seconds".format(dur))
+
     return train_data, test_data, synthetic_data
 
 
