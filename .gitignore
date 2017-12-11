@@ -7,6 +7,6 @@ node_modules/
 data-loader/output/
 
 database-generator/data.csv
-database-generator/nba-insight.db
+database-generator/b-ball-brain.db
 
 models/ModelResults.csv

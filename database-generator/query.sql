@@ -1,6 +1,6 @@
 -- This is a comment
 -- Before running this script, run:
--- sqlite3 nba-insight.db
+-- sqlite3 b-ball-brain.db
 -- This will put you in sqlite cli
 -- Now, run this script as:
 -- .read query.sql

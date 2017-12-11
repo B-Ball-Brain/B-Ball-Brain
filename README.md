@@ -1,4 +1,4 @@
-# NBA Insight
+# B-Ball Brain
 
 A machine learning tool for predicting which team will win an NBA game and which
 players give the best chance of winning.
@@ -31,7 +31,7 @@ A CSV file containing all the data for all time capsules can be next created
 by running `query.sql` inside the sqlite cli.
 
 ```shell
-$ sqlite3 nba-insight.db
+$ sqlite3 b-ball-brain.db
 sqlite> .read query.sql
 ```
 

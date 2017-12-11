@@ -16,7 +16,7 @@ sqlCommands.reverse()
 
 print("Opening sqlite3 connection... ")
 # Open the database connection
-conn = sqlite3.connect('nba-insight.db')
+conn = sqlite3.connect('b-ball-brain.db')
 
 def exeSQL(sql, optCommand=None):
     shortened = ' '.join(sql[:60].split())
@@ -39,7 +39,7 @@ conn.commit()
 
 with open('../data-loader/output/2016-17/player-stats.json', 'r') as f:
     data = json.load(f)
-    # Using the dictionaries key names as column names and the 
+    # Using the dictionaries key names as column names and the
     # values as values and inserting data into the database
     # See: https://stackoverflow.com/a/14108554/
     if data:
