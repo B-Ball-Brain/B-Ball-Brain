@@ -22,10 +22,11 @@ def plotAnalysis():
     plotX = np.linspace(np.min(scatterX), np.max(scatterX)).reshape(-1,1)
     plotY = linear_model.LinearRegression().fit(scatterX.reshape(-1, 1), scatterY).predict(plotX)
 
-    plt.scatter(trainY, scatterY)
+    plt.scatter(trainY, scatterY, label = "Time capsules")
     plt.xlabel('+/- per minute')
     plt.ylabel("Average " + col_headers[index] + " differential (home - away)")
-    plt.plot(plotX, plotY, 'r', linewidth = 2.0)
+    plt.plot(plotX, plotY, 'r', linewidth = 2.0, label = "Best-fit line")
+    plt.legend()
     plt.show()
 
 if __name__ == '__main__':
