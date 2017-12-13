@@ -22,8 +22,8 @@ def plotAnalysis():
     plotX = np.linspace(np.min(scatterX), np.max(scatterX)).reshape(-1,1)
     plotY = linear_model.LinearRegression().fit(scatterX.reshape(-1, 1), scatterY).predict(plotX)
 
-    plt.scatter(trainY, scatterY, label = "Time capsules")
-    plt.xlabel('+/- per minute')
+    plt.scatter(trainY, scatterY, s = 2, edgecolors = 'none', label = "Time capsules")
+    plt.xlabel('Time capsule +/- per minute')
     plt.ylabel("Average " + col_headers[index] + " differential (home - away)")
     plt.plot(plotX, plotY, 'r', linewidth = 2.0, label = "Best-fit line")
     plt.legend()
