@@ -66,9 +66,9 @@ conn.commit()
 # RegEx to match timecapsule filenames
 timecapsule_filename_regex = re.compile('[0-9]+-[0-9]+-[0-9]+-data\.json')
 
-for filename in os.listdir('../data-loader/output/2016-17/RegularSeason/'):
+for filename in os.listdir("../data-loader/output/2016-17/Regular Season/"):
     if timecapsule_filename_regex.match(filename):
-        with open('../data-loader/output/2016-17/RegularSeason/' + filename, 'r') as f:
+        with open("../data-loader/output/2016-17/Regular Season/" + filename, 'r') as f:
             data = json.load(f)
             insertVals = dict()
             insertVals["gameId"] = data["gameId"]
